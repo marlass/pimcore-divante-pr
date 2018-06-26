@@ -1,25 +1,8 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import SingleUser from './../components/SingleUser';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import './../styles.css';
 import SimpleSingleUser from './../components/SimpleSingleUser';
-
-const listQuery = gql`
-  {
-    repository(name: "pimcore", owner: "pimcore") {
-      nameWithOwner
-      mentionableUsers(last: 100) {
-        nodes {
-          login
-          company
-        }
-      }
-    }
-  }
-`;
 
 export default class ContributionList extends React.Component {
   constructor(props) {
@@ -72,26 +55,11 @@ export default class ContributionList extends React.Component {
         {this.state.members.map(user => (
           <SimpleSingleUser
             key={user}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
+            startDate={this.state.startDate ? this.state.startDate.unix() : ''}
+            endDate={this.state.endDate ? this.state.endDate.unix() : ''}
             user={user}
           />
         ))}
-        {/* <Query query={listQuery} ssr={false}>
-          {({ loading, error, data }) => {
-            if (loading) return <p>Loading...</p>;
-            if (error) return <p>Error :(</p>;
-
-            return data.repository.mentionableUsers.nodes
-              .filter(
-                ({ login, company }) =>
-                  company && company.trim() === '@DivanteLtd'
-              )
-              .map(({ login, company }) => (
-                <SingleUser user={login} key={login} />
-              ));
-          }}
-        </Query> */}
         <style jsx>
           {`
             * {
